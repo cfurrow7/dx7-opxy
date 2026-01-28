@@ -251,6 +251,89 @@
             letter-spacing: 1px;
             border-bottom: 1px solid #1a3333;
         }
+
+        .resources-section {
+            background: #0d0d0d;
+            border-bottom: 1px solid #1a3333;
+            overflow: hidden;
+        }
+
+        .resources-header {
+            padding: 12px 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            user-select: none;
+            transition: background 0.2s;
+        }
+
+        .resources-header:hover {
+            background: #1a1a1a;
+        }
+
+        .resources-title {
+            color: #00d9d9;
+            font-size: 11px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .resources-toggle {
+            color: #00a8a8;
+            font-size: 14px;
+        }
+
+        .resources-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            padding: 0 20px;
+        }
+
+        .resources-content.expanded {
+            max-height: 400px;
+            padding: 15px 20px 20px 20px;
+        }
+
+        .resources-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .resource-item {
+            background: #1a1a1a;
+            padding: 12px;
+            border: 1px solid #1a3333;
+        }
+
+        .resource-item h4 {
+            margin: 0 0 8px 0;
+            color: #00ffff;
+            font-size: 12px;
+            letter-spacing: 1px;
+        }
+
+        .resource-item p {
+            margin: 0 0 10px 0;
+            color: #00a8a8;
+            font-size: 10px;
+            line-height: 1.4;
+        }
+
+        .resource-item a {
+            color: #00d9d9;
+            text-decoration: none;
+            font-size: 11px;
+            border-bottom: 1px dotted #00d9d9;
+            transition: all 0.2s;
+        }
+
+        .resource-item a:hover {
+            color: #00ffff;
+            border-bottom-color: #00ffff;
+        }
     </style>
 </head>
 <body>
@@ -260,6 +343,47 @@
         Based on <a href="https://github.com/spacejam/tv7-js" target="_blank">tv7-js</a> by <a href="https://github.com/spacejam" target="_blank">Tyler Neely</a> |
         OP-XY support by <a href="https://github.com/cfurrow7/dx7-opxy" target="_blank">Chad Furrow</a> |
         DX7 synthesis engine from <a href="https://mutable-instruments.net/" target="_blank">Mutable Instruments Plaits</a>
+    </div>
+
+    <div class="resources-section">
+        <div class="resources-header" onclick="toggleResources()">
+            <span class="resources-title">📦 Where to Find DX7 Patches</span>
+            <span class="resources-toggle" id="resources-toggle">▼</span>
+        </div>
+        <div class="resources-content" id="resources-content">
+            <div class="resources-links">
+                <div class="resource-item">
+                    <h4>DX7 SYSEX Archive</h4>
+                    <p>Comprehensive collection of thousands of classic DX7 patches organized by category</p>
+                    <a href="http://www.dxsysex.com/index.php" target="_blank">dxsysex.com →</a>
+                </div>
+                <div class="resource-item">
+                    <h4>Yamaha DX7 Patch Library</h4>
+                    <p>Original factory ROM banks and user-created patches from the 80s and 90s</p>
+                    <a href="https://homepages.abdn.ac.uk/mth192/pages/dx7/sysex-format.html" target="_blank">Aberdeen Archive →</a>
+                </div>
+                <div class="resource-item">
+                    <h4>Bobby Blues DX7</h4>
+                    <p>Curated collection of high-quality DX7 sounds with modern patches</p>
+                    <a href="http://bobbyblues.recup.ch/yamaha_dx7/dx7.html" target="_blank">Bobby Blues →</a>
+                </div>
+                <div class="resource-item">
+                    <h4>Reddit DX7 Community</h4>
+                    <p>Active community sharing patches, tips, and custom SYSEX banks</p>
+                    <a href="https://www.reddit.com/r/synthesizers/" target="_blank">r/synthesizers →</a>
+                </div>
+                <div class="resource-item">
+                    <h4>Patch Base</h4>
+                    <p>Modern patch librarian with extensive DX7 bank management and sharing</p>
+                    <a href="https://coffeeshopped.com/patch-base" target="_blank">Patch Base →</a>
+                </div>
+                <div class="resource-item">
+                    <h4>How to Use</h4>
+                    <p>Download .syx files from any source above, then upload them using the file picker or drag-and-drop</p>
+                    <a href="#" onclick="document.getElementById('sysex-file').scrollIntoView({behavior:'smooth'}); return false;">Upload Section ↑</a>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="section">
@@ -739,6 +863,19 @@
         function showStatus(message, type = 'info') {
             statusDiv.textContent = message;
             statusDiv.className = type;
+        }
+
+        // Toggle resources section
+        function toggleResources() {
+            const content = document.getElementById('resources-content');
+            const toggle = document.getElementById('resources-toggle');
+            if (content.classList.contains('expanded')) {
+                content.classList.remove('expanded');
+                toggle.textContent = '▼';
+            } else {
+                content.classList.add('expanded');
+                toggle.textContent = '▲';
+            }
         }
 
         // Convert MIDI note number to musical note name
