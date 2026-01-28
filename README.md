@@ -41,7 +41,8 @@ Then open http://localhost:8080/tv7.html in your browser.
 
 1. **Load a DX7 Bank**
    - Upload your own .syx file, or
-   - Select from 50+ included example banks
+   - Select from 50+ included example banks, or
+   - Click "Where to Find DX7 Patches" to discover thousands of free patches online
 
 2. **Select a Patch**
    - Click any patch from the list
@@ -77,6 +78,17 @@ The OP-XY export creates a `.preset` folder containing:
 - ROM Banks 1A-4B
 - PPG Vocal, Deckard
 - And 40+ more!
+
+## Finding DX7 Patches
+
+The tool includes a built-in resources panel with links to the best DX7 patch archives:
+
+- **[DX7 SYSEX Archive](http://www.dxsysex.com/)** - Thousands of organized patches
+- **[Bobby Blues DX7](http://bobbyblues.recup.ch/yamaha_dx7/dx7.html)** - Curated high-quality sounds
+- **[Aberdeen Archive](https://homepages.abdn.ac.uk/mth192/pages/dx7/sysex-format.html)** - Original factory ROMs
+- **[Patch Base](https://coffeeshopped.com/patch-base)** - Modern patch librarian
+
+Simply download .syx files and upload them using the file picker!
 
 ## Technical Details
 
