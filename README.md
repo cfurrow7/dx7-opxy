@@ -2,7 +2,7 @@
 
 Convert DX7 SYSEX patches to multisamples for **OP-XY** or **Elektron Tonverk**.
 
-Forked from [spacejam/tv7-js](https://github.com/spacejam/tv7-js) with added OP-XY support.
+Forked from [spacejam/tv7-js](https://github.com/spacejam/tv7-js) with added OP-XY support and retro 80s DX7 aesthetic.
 
 ## Features
 
@@ -10,9 +10,10 @@ Forked from [spacejam/tv7-js](https://github.com/spacejam/tv7-js) with added OP-
 - 🎵 Generate multisamples across any MIDI note range
 - 🎛️ Preview patches with on-screen keyboard
 - 📦 Export to two formats:
+  - **OP-XY** (.preset with individual WAVs + patch.json) - Default
   - **Elektron Tonverk** (.elmulti + concatenated WAV)
-  - **OP-XY** (.preset with individual WAVs + patch.json)
 - 🔊 Includes 50+ example DX7 patch banks
+- 🎨 Classic 80s DX7 interface with teal LCD-style display
 
 ## Quick Start
 
@@ -98,9 +99,9 @@ MIT License - see original [spacejam/tv7-js](https://github.com/spacejam/tv7-js)
 
 ## Credits
 
-- Original TV7 tool by [Tyler Neely](https://github.com/spacejam)
-- DX7 synthesis engine ported from Mutable Instruments Plaits
-- OP-XY integration by Chad Furrow
+- Original TV7 tool by [Tyler Neely](https://github.com/spacejam) - Foundation for Tonverk export
+- DX7 synthesis engine ported from [Mutable Instruments Plaits](https://mutable-instruments.net/)
+- OP-XY integration and 80s DX7 interface design by Chad Furrow
 
 ## Links
 
