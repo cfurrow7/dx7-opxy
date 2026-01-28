@@ -8,126 +8,188 @@
         html {
             position: relative;
             min-height: 100%;
-            color: #efefef;
-            background: #000;
+            background: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%);
         }
 
         body {
-            font-family: 'Courier New', monospace;
-            max-width: 800px;
-            margin: 40px auto;
-            padding: 20px;
-            background: rgba(0, 0, 0, 0.80);
-            color: #efefef;
+            font-family: 'Courier New', 'Lucida Console', monospace;
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 0;
+            background: #1a1a1a;
+            color: #00d9d9;
+            border: 3px solid #2a2a2a;
+            box-shadow: 0 0 30px rgba(0, 217, 217, 0.1), inset 0 0 20px rgba(0, 0, 0, 0.5);
         }
 
         h1 {
-            color: #D1413C;
-            border-bottom: 2px solid #FF5F52;
-            padding-bottom: 10px;
+            color: #00ffff;
+            text-align: center;
+            font-size: 24px;
+            letter-spacing: 3px;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(180deg, #2d2d2d 0%, #1a1a1a 100%);
+            border-bottom: 2px solid #00d9d9;
+            text-shadow: 0 0 10px rgba(0, 217, 217, 0.5);
+            font-weight: normal;
+        }
+
+        .credit {
+            text-align: center;
+            padding: 10px 20px;
+            background: #0d0d0d;
+            color: #00a8a8;
+            font-size: 11px;
+            border-bottom: 1px solid #2a2a2a;
+        }
+
+        .credit a {
+            color: #00ffff;
+            text-decoration: none;
+            border-bottom: 1px dotted #00d9d9;
+        }
+
+        .credit a:hover {
+            color: #ff8800;
+            border-bottom-color: #ff8800;
         }
 
         .section {
-            margin: 30px 0;
-            padding: 20px;
-            background: rgba(0, 0, 0, 0.80);
-            border-radius: 5px;
-            border: 1px solid #333;
+            margin: 0;
+            padding: 25px;
+            background: #1a1a1a;
+            border-bottom: 1px solid #2a2a2a;
+        }
+
+        h3 {
+            color: #00ffff;
+            font-size: 14px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin: 0 0 15px 0;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #00d9d9;
         }
 
         label {
             display: block;
-            margin-bottom: 5px;
-            color: #FF5F52;
-            font-weight: bold;
+            margin-bottom: 8px;
+            color: #00d9d9;
+            font-weight: normal;
+            font-size: 12px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
         }
 
         input[type="file"] {
             margin-bottom: 15px;
-            padding: 8px;
-            border: 1px solid #FF5F52;
-            background: #000;
-            color: #efefef;
-            border-radius: 3px;
+            padding: 10px;
+            border: 2px solid #00d9d9;
+            background: #0d0d0d;
+            color: #00ffff;
+            border-radius: 0;
             width: 100%;
             box-sizing: border-box;
             height: 42px;
+            font-family: 'Courier New', monospace;
         }
 
         select {
             box-sizing: border-box;
-            padding: 8px;
+            padding: 10px;
             height: 42px;
+            border: 2px solid #00d9d9;
+            background: #0d0d0d;
+            color: #00ffff;
+            border-radius: 0;
+            font-family: 'Courier New', monospace;
         }
 
-        input[type="number"] {
+        input[type="number"], input[type="text"] {
             padding: 8px;
             margin: 5px 0;
-            border: 1px solid #FF5F52;
-            background: #000;
-            color: #efefef;
-            border-radius: 3px;
+            border: 2px solid #00d9d9;
+            background: #0d0d0d;
+            color: #00ffff;
+            border-radius: 0;
             width: 100px;
+            font-family: 'Courier New', monospace;
+        }
+
+        input[type="text"] {
+            width: 100%;
         }
 
         .patch-list {
             max-height: 300px;
             overflow-y: auto;
-            border: 1px solid #333;
-            border-radius: 3px;
-            background: #000;
+            border: 2px solid #00d9d9;
+            background: #0d0d0d;
         }
 
         .patch-item {
-            padding: 10px;
+            padding: 12px;
             cursor: pointer;
-            border-bottom: 1px solid #222;
+            border-bottom: 1px solid #1a1a1a;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            transition: all 0.2s;
         }
 
         .patch-item:hover {
-            background: #1a1a1a;
-            border-bottom: 1px dotted #FF5F52;
+            background: #1a3333;
+            border-bottom: 1px solid #00d9d9;
         }
 
         .patch-item.selected {
-            background: #331a1a;
-            border-bottom: 1px solid #FF5F52;
+            background: #003333;
+            border-left: 3px solid #00ffff;
+            border-bottom: 1px solid #00d9d9;
+            box-shadow: inset 0 0 10px rgba(0, 217, 217, 0.2);
         }
 
         .patch-number {
-            color: #888;
+            color: #00a8a8;
             font-weight: bold;
-            margin-right: 10px;
+            margin-right: 15px;
+            min-width: 30px;
         }
 
         .patch-name {
             flex-grow: 1;
+            color: #00ffff;
         }
 
         button {
-            padding: 10px 20px;
+            padding: 12px 24px;
             margin: 5px;
-            background: #FF5F52;
+            background: linear-gradient(180deg, #00d9d9 0%, #00a8a8 100%);
             color: #000;
-            border: none;
-            border-radius: 3px;
+            border: 2px solid #00ffff;
+            border-radius: 0;
             cursor: pointer;
             font-family: 'Courier New', monospace;
             font-weight: bold;
-            font-size: 14px;
+            font-size: 12px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+            transition: all 0.2s;
         }
 
         button:hover {
-            background: #D1413C;
+            background: linear-gradient(180deg, #00ffff 0%, #00d9d9 100%);
+            box-shadow: 0 0 15px rgba(0, 217, 217, 0.5);
         }
 
         button:disabled {
-            background: #444;
-            color: #888;
+            background: #2a2a2a;
+            color: #555;
             cursor: not-allowed;
+            border-color: #3a3a3a;
+            box-shadow: none;
         }
 
         .controls {
@@ -137,46 +199,68 @@
         }
 
         .param-group {
-            margin: 15px 0;
+            margin: 20px 0;
+            padding: 15px;
+            background: #0d0d0d;
+            border: 1px solid #1a3333;
         }
 
         .param-label {
-            color: #888;
-            font-size: 12px;
+            color: #00a8a8;
+            font-size: 11px;
             margin-right: 10px;
+            letter-spacing: 1px;
         }
 
         #status {
             margin-top: 20px;
-            padding: 10px;
-            border-radius: 3px;
+            padding: 15px;
+            border-radius: 0;
             display: none;
+            font-size: 12px;
+            letter-spacing: 1px;
         }
 
         #status.info {
             display: block;
-            background: #1a1a1a;
-            border: 1px solid #FF5F52;
+            background: #1a3333;
+            border: 2px solid #00d9d9;
+            color: #00ffff;
         }
 
         #status.success {
             display: block;
-            background: #1a1a1a;
-            border: 1px solid #FF5F52;
-            color: #efefef;
+            background: #1a3333;
+            border: 2px solid #00ffff;
+            color: #00ffff;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
         }
 
         #status.error {
             display: block;
-            background: #330000;
-            border: 1px solid #ff0000;
-            color: #ff6666;
+            background: #331a00;
+            border: 2px solid #ff8800;
+            color: #ff8800;
+        }
+        .subtitle {
+            text-align: center;
+            padding: 15px 20px;
+            background: #0d0d0d;
+            color: #00a8a8;
+            font-size: 12px;
+            letter-spacing: 1px;
+            border-bottom: 1px solid #1a3333;
         }
     </style>
 </head>
 <body>
     <h1>DX7 to OP-XY / Tonverk Multisample Patch Maker</h1>
-    <p style="color: #888; margin-top: -10px; margin-bottom: 20px;">Convert DX7 patches to multisamples for OP-XY or Elektron Tonverk</p>
+    <div class="subtitle">Convert DX7 patches to multisamples for OP-XY or Elektron Tonverk</div>
+    <div class="credit">
+        Based on <a href="https://github.com/spacejam/tv7-js" target="_blank">tv7-js</a> by <a href="https://github.com/spacejam" target="_blank">Tyler Neely</a> |
+        OP-XY support by <a href="https://github.com/cfurrow7/dx7-opxy" target="_blank">Chad Furrow</a> |
+        DX7 synthesis engine from <a href="https://mutable-instruments.net/" target="_blank">Mutable Instruments Plaits</a>
+    </div>
 
     <div class="section">
         <div style="display: flex; gap: 20px; align-items: flex-start;">
@@ -186,7 +270,7 @@
             </div>
             <div style="flex: 0 0 300px;">
                 <label for="example-select">Or Load Example Bank</label>
-                <select id="example-select" style="width: 100%; padding: 8px; border: 1px solid #FF5F52; background: #000; color: #efefef; border-radius: 3px; font-family: 'Courier New', monospace;">
+                <select id="example-select" style="width: 100%; padding: 8px; border: 1px solid #00d9d9; background: #0d0d0d; color: #00ffff; border-radius: 0; font-family: 'Courier New', monospace;">
                     <option value="">-- Select Example --</option>
                     <option value="examples/tyler-favorites.syx">Tyler's favorites</option>
                     <option value="examples/Legowelt magic DX7 cart.syx">Legowelt magic DX7 cart</option>
@@ -258,7 +342,7 @@
 
         <div class="param-group">
             <label for="output-name">Output Multisample Name</label>
-            <input type="text" id="output-name" style="width: 100%; padding: 8px; border: 1px solid #FF5F52; background: #000; color: #efefef; border-radius: 3px; font-family: 'Courier New', monospace; box-sizing: border-box;">
+            <input type="text" id="output-name" style="width: 100%; padding: 8px; border: 1px solid #00d9d9; background: #0d0d0d; color: #00ffff; border-radius: 0; font-family: 'Courier New', monospace; box-sizing: border-box;">
         </div>
 
         <div class="param-group">
@@ -285,13 +369,13 @@
             <div style="margin-bottom: 10px;">
                 <span class="param-label">Min:</span>
                 <input type="number" id="min-note" value="60" min="0" max="127">
-                <span id="min-note-name" class="param-label" style="color: #FF5F52; margin-left: 5px;">(C4)</span>
+                <span id="min-note-name" class="param-label" style="color: #00d9d9; margin-left: 5px;">(C4)</span>
                 <button id="play-min-btn" disabled style="margin-left: 10px; padding: 5px 10px;">▶ Preview Min</button>
             </div>
             <div style="margin-bottom: 10px;">
                 <span class="param-label">Max:</span>
                 <input type="number" id="max-note" value="108" min="0" max="127">
-                <span id="max-note-name" class="param-label" style="color: #FF5F52; margin-left: 5px;">(C8)</span>
+                <span id="max-note-name" class="param-label" style="color: #00d9d9; margin-left: 5px;">(C8)</span>
                 <button id="play-max-btn" disabled style="margin-left: 10px; padding: 5px 10px;">▶ Preview Max</button>
             </div>
             <div>
@@ -725,7 +809,7 @@
                     key.style.left = `${whiteKeyIndex * whiteKeyWidth - whiteKeyWidth * 0.3}%`;
 
                     if (isInRange) {
-                        key.style.outline = '2px solid #FF5F52';
+                        key.style.outline = '2px solid #00d9d9';
                         key.style.outlineOffset = '-2px';
                     }
                 } else {
