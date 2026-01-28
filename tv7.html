@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>tv7 - DX7 Multisample Generator (Tonverk / OP-XY)</title>
+    <style>
+        html {
+            position: relative;
+            min-height: 100%;
+            color: #efefef;
+            background: url('./helicopter_xs.jpg') #000 no-repeat top left fixed;
+            background-size: contain;
+        }
+
+        @media (min-width: 500px) {
+            html {
+                background: url('./helicopter.jpg') #000 no-repeat bottom left fixed;
+                background-size: contain;
+            }
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.80);
+            color: #efefef;
+        }
+
+        h1 {
+            color: #D1413C;
+            border-bottom: 2px solid #FF5F52;
+            padding-bottom: 10px;
+        }
+
+        .section {
+            margin: 30px 0;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.80);
+            border-radius: 5px;
+            border: 1px solid #333;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #FF5F52;
+            font-weight: bold;
+        }
+
+        input[type="file"] {
+            margin-bottom: 15px;
+            padding: 8px;
+            border: 1px solid #FF5F52;
+            background: #000;
+            color: #efefef;
+            border-radius: 3px;
+            width: 100%;
+            box-sizing: border-box;
+            height: 42px;
+        }
+
+        select {
+            box-sizing: border-box;
+            padding: 8px;
+            height: 42px;
+        }
+
+        input[type="number"] {
+            padding: 8px;
+            margin: 5px 0;
+            border: 1px solid #FF5F52;
+            background: #000;
+            color: #efefef;
+            border-radius: 3px;
+            width: 100px;
+        }
+
+        .patch-list {
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #333;
+            border-radius: 3px;
+            background: #000;
+        }
+
+        .patch-item {
+            padding: 10px;
+            cursor: pointer;
+            border-bottom: 1px solid #222;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .patch-item:hover {
+            background: #1a1a1a;
+            border-bottom: 1px dotted #FF5F52;
+        }
+
+        .patch-item.selected {
+            background: #331a1a;
+            border-bottom: 1px solid #FF5F52;
+        }
+
+        .patch-number {
+            color: #888;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .patch-name {
+            flex-grow: 1;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            background: #FF5F52;
+            color: #000;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        button:hover {
+            background: #D1413C;
+        }
+
+        button:disabled {
+            background: #444;
+            color: #888;
+            cursor: not-allowed;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .param-group {
+            margin: 15px 0;
+        }
+
+        .param-label {
+            color: #888;
+            font-size: 12px;
+            margin-right: 10px;
+        }
+
+        #status {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 3px;
+            display: none;
+        }
+
+        #status.info {
+            display: block;
+            background: #1a1a1a;
+            border: 1px solid #FF5F52;
+        }
+
+        #status.success {
+            display: block;
+            background: #1a1a1a;
+            border: 1px solid #FF5F52;
+            color: #efefef;
+        }
+
+        #status.error {
+            display: block;
+            background: #330000;
+            border: 1px solid #ff0000;
+            color: #ff6666;
+        }
+    </style>
+</head>
+<body>
+    <h1>tv7 - DX7 Multisample Generator</h1>
+    <p style="color: #888; margin-top: -10px; margin-bottom: 20px;">Generate multisamples for Elektron Tonverk or OP-XY</p>
+
+    <div class="section">
+        <div style="display: flex; gap: 20px; align-items: flex-start;">
+            <div style="flex: 1;">
+                <label for="sysex-file">Upload DX7 SYSEX Bank File (.syx)</label>
+                <input type="file" id="sysex-file" accept=".syx">
+            </div>
+            <div style="flex: 0 0 300px;">
+                <label for="example-select">Or Load Example Bank</label>
+                <select id="example-select" style="width: 100%; padding: 8px; border: 1px solid #FF5F52; background: #000; color: #efefef; border-radius: 3px; font-family: 'Courier New', monospace;">
+                    <option value="">-- Select Example --</option>
+                    <option value="examples/tyler-favorites.syx">Tyler's favorites</option>
+                    <option value="examples/Legowelt magic DX7 cart.syx">Legowelt magic DX7 cart</option>
+                    <option value="examples/SIMS2001.syx">SIMS2001</option>
+                    <option value="examples/SIMS98.syx">SIMS98</option>
+                    <option value="examples/PPGVOCAL.syx">PPGVOCAL</option>
+                    <option value="examples/deckard.syx">deckard</option>
+                    <option value="examples/wurlizer.syx">wurlizer</option>
+                    <option value="examples/rhodes1.syx">rhodes1</option>
+                    <option value="examples/rhodes2.syx">rhodes2</option>
+                    <option value="examples/KB_MAG1.syx">KB_MAG1</option>
+                    <option value="examples/KB_MAG2.syx">KB_MAG2</option>
+                    <option value="examples/KB_MAG3.syx">KB_MAG3</option>
+                    <option value="examples/GreyMatter E! 2.syx">GreyMatter E! 2</option>
+                    <option value="examples/GreyMatter E! 5.syx">GreyMatter E! 5</option>
+                    <option value="examples/GreyMatter E! 7.syx">GreyMatter E! 7</option>
+                    <option value="examples/ROM1A.syx">ROM1A</option>
+                    <option value="examples/ROM1B.syx">ROM1B</option>
+                    <option value="examples/ROM2A.syx">ROM2A</option>
+                    <option value="examples/ROM2B.syx">ROM2B</option>
+                    <option value="examples/ROM3A.syx">ROM3A</option>
+                    <option value="examples/ROM3B.syx">ROM3B</option>
+                    <option value="examples/ROM4A.syx">ROM4A</option>
+                    <option value="examples/ROM4B.syx">ROM4B</option>
+                    <option value="examples/KV04A.syx">KV04A</option>
+                    <option value="examples/KV04B.syx">KV04B</option>
+                    <option value="examples/MISC.syx">MISC</option>
+                    <option value="examples/vrc101a.syx">vrc101a</option>
+                    <option value="examples/vrc101b.syx">vrc101b</option>
+                    <option value="examples/vrc102a.syx">vrc102a</option>
+                    <option value="examples/vrc102b.syx">vrc102b</option>
+                    <option value="examples/vrc103a.syx">vrc103a</option>
+                    <option value="examples/vrc103b.syx">vrc103b</option>
+                    <option value="examples/vrc104a.syx">vrc104a</option>
+                    <option value="examples/vrc104b.syx">vrc104b</option>
+                    <option value="examples/vrc105a.syx">vrc105a</option>
+                    <option value="examples/vrc105b.syx">vrc105b</option>
+                    <option value="examples/vrc106a.syx">vrc106a</option>
+                    <option value="examples/vrc106b.syx">vrc106b</option>
+                    <option value="examples/vrc107a.syx">vrc107a</option>
+                    <option value="examples/vrc107b.syx">vrc107b</option>
+                    <option value="examples/vrc108a.syx">vrc108a</option>
+                    <option value="examples/vrc108b.syx">vrc108b</option>
+                    <option value="examples/vrc109a.syx">vrc109a</option>
+                    <option value="examples/vrc109b.syx">vrc109b</option>
+                    <option value="examples/vrc110a.syx">vrc110a</option>
+                    <option value="examples/vrc110b.syx">vrc110b</option>
+                    <option value="examples/vrc111a.syx">vrc111a</option>
+                    <option value="examples/vrc111b.syx">vrc111b</option>
+                    <option value="examples/vrc112a.syx">vrc112a</option>
+                    <option value="examples/vrc112b.syx">vrc112b</option>
+                    <option value="examples/Guit_Clav2.syx">Guit_Clav2</option>
+                    <option value="examples/Guit_Clav3.syx">Guit_Clav3</option>
+                    <option value="examples/Guit_Clav4.syx">Guit_Clav4</option>
+                    <option value="examples/Guit_Clav5.syx">Guit_Clav5</option>
+                    <option value="examples/X-Guit_Clav1.syx">X-Guit_Clav1</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="section" id="patch-section" style="display: none;">
+        <label>Select Patch</label>
+        <div class="patch-list" id="patch-list"></div>
+    </div>
+
+    <div class="section" id="controls-section" style="display: none;">
+        <h3>Multisample Parameters</h3>
+
+        <div class="param-group">
+            <label for="output-name">Output Multisample Name</label>
+            <input type="text" id="output-name" style="width: 100%; padding: 8px; border: 1px solid #FF5F52; background: #000; color: #efefef; border-radius: 3px; font-family: 'Courier New', monospace; box-sizing: border-box;">
+        </div>
+
+        <div class="param-group">
+            <label>Output Format</label>
+            <div style="display: flex; gap: 20px; margin-top: 10px;">
+                <label style="display: flex; align-items: center; cursor: pointer; color: #efefef; font-weight: normal;">
+                    <input type="radio" name="output-format" value="tonverk" checked style="margin-right: 8px;">
+                    Elektron Tonverk (.elmulti)
+                </label>
+                <label style="display: flex; align-items: center; cursor: pointer; color: #efefef; font-weight: normal;">
+                    <input type="radio" name="output-format" value="opxy" style="margin-right: 8px;">
+                    OP-XY (.preset)
+                </label>
+            </div>
+        </div>
+
+        <div class="param-group">
+            <label>Key-On Duration (ms)</label>
+            <input type="number" id="duration" value="2000" min="100" max="10000" step="100">
+        </div>
+
+        <div class="param-group">
+            <label>MIDI Note Range</label>
+            <div style="margin-bottom: 10px;">
+                <span class="param-label">Min:</span>
+                <input type="number" id="min-note" value="60" min="0" max="127">
+                <span id="min-note-name" class="param-label" style="color: #FF5F52; margin-left: 5px;">(C4)</span>
+                <button id="play-min-btn" disabled style="margin-left: 10px; padding: 5px 10px;">▶ Preview Min</button>
+            </div>
+            <div style="margin-bottom: 10px;">
+                <span class="param-label">Max:</span>
+                <input type="number" id="max-note" value="108" min="0" max="127">
+                <span id="max-note-name" class="param-label" style="color: #FF5F52; margin-left: 5px;">(C8)</span>
+                <button id="play-max-btn" disabled style="margin-left: 10px; padding: 5px 10px;">▶ Preview Max</button>
+            </div>
+            <div>
+                <span class="param-label">Increment:</span>
+                <input type="number" id="note-increment" value="3" min="1" max="12">
+            </div>
+
+            <div id="keyboard" style="margin-top: 15px; display: flex; height: 80px; position: relative; user-select: none;"></div>
+        </div>
+
+        <div class="controls">
+            <button id="download-btn" disabled>Download Multisample</button>
+        </div>
+    </div>
+
+    <div id="status"></div>
+
+    <!-- Load JSZip from CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+    <script type="module">
+        import { PatchBank, generateSamples } from './src/dx7.js';
+
+        let patchBank = null;
+        let selectedPatch = null;
+        let audioContext = null;
+
+        // Inline multisample generation functions to avoid JSZip module import issues
+        function tonverkSanitize(input) {
+            const allowedSymbols = ['~', '!', '@', '#', '$', '%', '^', '&', '(', ')', '_', '+', '-', '=', ' '];
+            const allowedLetters = ['å', 'ß', 'ä', 'ö', 'ü', 'æ', 'ø', 'ç', 'ñ', 'Å', 'ẞ', 'Ä', 'Ö', 'Ü', 'Æ', 'Ø', 'Ç', 'Ñ'];
+            return input
+                .split('')
+                .filter(c => {
+                    const code = c.charCodeAt(0);
+                    const isAsciiAlphanumeric = (code >= 48 && code <= 57) || (code >= 65 && code <= 90) || (code >= 97 && code <= 122);
+                    return isAsciiAlphanumeric || allowedSymbols.includes(c) || allowedLetters.includes(c);
+                })
+                .join('')
+                .replace(/\s+/g, ' ')  // Replace multiple contiguous spaces with single space
+                .trim();
+        }
+
+        function generateWav(pitchBuffers, sampleRate) {
+            const maxLength = Math.max(...pitchBuffers.map(buf => buf.length));
+            const totalSamples = maxLength * pitchBuffers.length;
+            const dataSize = totalSamples * 4;
+            const fileSize = 44 + dataSize;
+            const buffer = new ArrayBuffer(fileSize);
+            const view = new DataView(buffer);
+
+            function writeString(view, offset, string) {
+                for (let i = 0; i < string.length; i++) {
+                    view.setUint8(offset + i, string.charCodeAt(i));
+                }
+            }
+
+            writeString(view, 0, 'RIFF');
+            view.setUint32(4, fileSize - 8, true);
+            writeString(view, 8, 'WAVE');
+            writeString(view, 12, 'fmt ');
+            view.setUint32(16, 16, true);
+            view.setUint16(20, 3, true);
+            view.setUint16(22, 1, true);
+            view.setUint32(24, sampleRate, true);
+            view.setUint32(28, sampleRate * 4, true);
+            view.setUint16(32, 4, true);
+            view.setUint16(34, 32, true);
+            writeString(view, 36, 'data');
+            view.setUint32(40, dataSize, true);
+
+            let offset = 44;
+            for (const pitchBuffer of pitchBuffers) {
+                for (let i = 0; i < pitchBuffer.length; i++) {
+                    view.setFloat32(offset, pitchBuffer[i], true);
+                    offset += 4;
+                }
+                for (let i = pitchBuffer.length; i < maxLength; i++) {
+                    view.setFloat32(offset, 0.0, true);
+                    offset += 4;
+                }
+            }
+
+            return new Uint8Array(buffer);
+        }
+
+        function generateElmulti(name, zones) {
+            let toml = `# ELEKTRON MULTI-SAMPLE MAPPING FORMAT\nversion = 0\nname = '${name}'\n`;
+            zones.forEach((zone, index) => {
+                const isLast = index === zones.length - 1;
+                toml += `\n[[key-zones]]\npitch = ${zone.pitch}\nkey-center = ${zone.pitch}.0\n\n`;
+                toml += `[[key-zones.velocity-layers]]\nvelocity = 0.9960785\nstrategy = 'Forward'\n\n`;
+                toml += `[[key-zones.velocity-layers.sample-slots]]\nsample = '${name}.wav'\ntrim-start = ${zone.start}\n`;
+                if (!isLast) {
+                    toml += `trim-end = ${zone.end}\n`;
+                }
+            });
+            return toml;
+        }
+
+        function trimSilence(buffer, thresholdDb = -60) {
+            const threshold = Math.pow(10, thresholdDb / 20);
+            const length = buffer.length;
+
+            let startFrame = 0;
+            let endFrame = length - 1;
+
+            // Find start (first sample above threshold)
+            for (let i = 0; i < length; i++) {
+                if (Math.abs(buffer[i]) > threshold) {
+                    startFrame = i;
+                    break;
+                }
+            }
+
+            // Find end (last sample above threshold)
+            for (let i = length - 1; i >= startFrame; i--) {
+                if (Math.abs(buffer[i]) > threshold) {
+                    endFrame = i;
+                    break;
+                }
+            }
+
+            // Extract trimmed portion
+            const trimmedLength = endFrame - startFrame + 1;
+            const trimmed = new Float32Array(trimmedLength);
+            for (let i = 0; i < trimmedLength; i++) {
+                trimmed[i] = buffer[startFrame + i];
+            }
+
+            return trimmed;
+        }
+
+        function generateWav16Bit(buffer, sampleRate) {
+            // Generate 16-bit PCM WAV (no padding, exact length)
+            const numSamples = buffer.length;
+            const dataSize = numSamples * 2; // 2 bytes per 16-bit sample
+            const fileSize = 44 + dataSize;
+            const wavBuffer = new ArrayBuffer(fileSize);
+            const view = new DataView(wavBuffer);
+
+            function writeString(view, offset, string) {
+                for (let i = 0; i < string.length; i++) {
+                    view.setUint8(offset + i, string.charCodeAt(i));
+                }
+            }
+
+            // WAV header
+            writeString(view, 0, 'RIFF');
+            view.setUint32(4, fileSize - 8, true);
+            writeString(view, 8, 'WAVE');
+            writeString(view, 12, 'fmt ');
+            view.setUint32(16, 16, true); // fmt chunk size
+            view.setUint16(20, 1, true);  // Audio format: 1 = PCM
+            view.setUint16(22, 1, true);  // Channels: 1 = mono
+            view.setUint32(24, sampleRate, true);
+            view.setUint32(28, sampleRate * 2, true); // Byte rate (16-bit = 2 bytes)
+            view.setUint16(32, 2, true);  // Block align (16-bit = 2 bytes)
+            view.setUint16(34, 16, true); // Bits per sample: 16
+            writeString(view, 36, 'data');
+            view.setUint32(40, dataSize, true);
+
+            // Convert float32 to int16
+            let offset = 44;
+            for (let i = 0; i < numSamples; i++) {
+                // Clamp to -1.0 to 1.0 and convert to 16-bit integer
+                const sample = Math.max(-1.0, Math.min(1.0, buffer[i]));
+                const sample16 = Math.round(sample * 32767);
+                view.setInt16(offset, sample16, true);
+                offset += 2;
+            }
+
+            return new Uint8Array(wavBuffer);
+        }
+
+        function generateOpxyPatch(name, slices, sampleRate) {
+            const regions = [];
+
+            for (let i = 0; i < slices.length; i++) {
+                const slice = slices[i];
+                const prevNote = i > 0 ? slices[i - 1].pitch : 0;
+                const nextNote = i < slices.length - 1 ? slices[i + 1].pitch : 127;
+
+                const lokey = i === 0 ? 0 : Math.floor((prevNote + slice.pitch) / 2) + 1;
+                const hikey = i === slices.length - 1 ? 127 : Math.floor((slice.pitch + nextNote) / 2);
+
+                const framecount = slice.framecount;
+                const loopEnd = Math.max(0, framecount - 2000);
+
+                regions.push({
+                    "sample": slice.filename,
+                    "pitch.keycenter": slice.pitch,
+                    "lokey": lokey,
+                    "hikey": hikey,
+                    "loop.start": 0,
+                    "loop.end": loopEnd,
+                    "loop.enabled": true,
+                    "loop.onrelease": true,
+                    "loop.crossfade": 0,
+                    "gain": 0,
+                    "reverse": false,
+                    "sample.start": 0,
+                    "sample.end": framecount,
+                    "framecount": framecount
+                });
+            }
+
+            const patch = {
+                "engine": {
+                    "bendrange": 8191,
+                    "highpass": 0,
+                    "playmode": "poly",
+                    "transpose": 0,
+                    "portamento.amount": 0,
+                    "portamento.type": 32767,
+                    "tuning.root": 0,
+                    "tuning.scale": 0,
+                    "velocity.sensitivity": 19660,
+                    "volume": 18348,
+                    "width": 0,
+                    "modulation": {
+                        "aftertouch": {"amount": 16383, "target": 0},
+                        "modwheel": {"amount": 16383, "target": 0},
+                        "pitchbend": {"amount": 16383, "target": 0},
+                        "velocity": {"amount": 16383, "target": 0}
+                    },
+                    "params": [16384, 16384, 16384, 16384, 16384, 16384, 16384, 16384]
+                },
+                "envelope": {
+                    "amp": {"attack": 0, "decay": 0, "release": 25722, "sustain": 32767},
+                    "filter": {"attack": 0, "decay": 0, "release": 19968, "sustain": 32767}
+                },
+                "fx": {
+                    "active": true,
+                    "params": [32767, 0, 15009, 32767, 0, 32767, 6553, 9830],
+                    "type": "ladder"
+                },
+                "lfo": {
+                    "active": false,
+                    "params": [20309, 5679, 19114, 15807, 0, 0, 0, 12287],
+                    "type": "random"
+                },
+                "platform": "OP-XY",
+                "type": "multisampler",
+                "version": 4,
+                "regions": regions,
+                "rootFolderName": name
+            };
+
+            return JSON.stringify(patch, null, 2);
+        }
+
+        async function generateMultisampleWithName(patch, name, midiNotes, sampleRate, durationMs, outputFormat) {
+            console.log('generateMultisampleWithName called with:', { patch: patch.getName(), name, midiNotes, sampleRate, durationMs, outputFormat });
+
+            // Use a Map to store buffers, keyed by MIDI note (mimics Rust's BTreeMap)
+            const bufs = new Map();
+
+            // Target level: 0.5 for polyphonic playback headroom
+            const TARGET_LEVEL = 0.5;
+
+            for (const midiNote of midiNotes) {
+                console.log(`Generating samples for note ${midiNote}...`);
+                const buf = generateSamples(patch, midiNote, sampleRate, durationMs, TARGET_LEVEL);
+                console.log(`Generated ${buf.length} samples`);
+                bufs.set(midiNote, buf);
+            }
+
+            const zip = new JSZip();
+
+            if (outputFormat === 'tonverk') {
+                // Generate Tonverk format (concatenated WAV + .elmulti)
+                // Find the longest buffer
+                let maxLength = 0;
+                for (const buf of bufs.values()) {
+                    if (buf.length > maxLength) maxLength = buf.length;
+                }
+                console.log(`Max length: ${maxLength} samples`);
+
+                // Sort pitches in ascending order (mimics BTreeMap iteration order)
+                const sortedPitches = Array.from(bufs.keys()).sort((a, b) => a - b);
+                console.log('Sorted pitches:', sortedPitches);
+
+                // Build ordered pitch buffers and zones
+                const pitchBuffers = [];
+                const zones = [];
+                let runningSampleCount = 0;
+
+                for (const pitch of sortedPitches) {
+                    const buf = bufs.get(pitch);
+                    pitchBuffers.push(buf);
+
+                    const start = runningSampleCount;
+                    const end = start + maxLength;
+                    runningSampleCount = end;
+
+                    zones.push({ pitch, start, end });
+                    console.log(`Zone: pitch=${pitch}, start=${start}, end=${end}`);
+                }
+
+                const wavData = generateWav(pitchBuffers, sampleRate);
+                const tomlData = generateElmulti(name, zones);
+                const folder = zip.folder(name);
+                folder.file(`${name}.wav`, wavData);
+                folder.file(`${name}.elmulti`, tomlData);
+            } else {
+                // Generate OP-XY format (individual WAVs + patch.json)
+                const sortedPitches = Array.from(bufs.keys()).sort((a, b) => a - b);
+                const slices = [];
+
+                for (const pitch of sortedPitches) {
+                    const buf = bufs.get(pitch);
+
+                    // Trim silence from beginning and end (-60dB threshold)
+                    const trimmedBuf = trimSilence(buf, -60);
+                    console.log(`Pitch ${pitch}: original=${buf.length} samples, trimmed=${trimmedBuf.length} samples`);
+
+                    const noteName = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'][pitch % 12];
+                    const octave = Math.floor(pitch / 12) - 1;
+                    const fullNoteName = `${noteName}${octave}`;
+                    const filename = `${name} ${fullNoteName}.wav`;
+
+                    // Generate 16-bit PCM WAV file (trimmed, no padding)
+                    const wavData = generateWav16Bit(trimmedBuf, sampleRate);
+
+                    slices.push({
+                        pitch: pitch,
+                        filename: filename,
+                        framecount: trimmedBuf.length
+                    });
+
+                    const folder = zip.folder(`${name}.preset`);
+                    folder.file(filename, wavData);
+                }
+
+                // Generate patch.json
+                const patchJson = generateOpxyPatch(name, slices, sampleRate);
+                const folder = zip.folder(`${name}.preset`);
+                folder.file('patch.json', patchJson);
+            }
+
+            return await zip.generateAsync({ type: 'blob' });
+        }
+
+        // DOM elements
+        const sysexFileInput = document.getElementById('sysex-file');
+        const exampleSelect = document.getElementById('example-select');
+        const patchSection = document.getElementById('patch-section');
+        const patchList = document.getElementById('patch-list');
+        const controlsSection = document.getElementById('controls-section');
+        const outputNameInput = document.getElementById('output-name');
+        const minNoteInput = document.getElementById('min-note');
+        const maxNoteInput = document.getElementById('max-note');
+        const minNoteNameSpan = document.getElementById('min-note-name');
+        const maxNoteNameSpan = document.getElementById('max-note-name');
+        const playMinBtn = document.getElementById('play-min-btn');
+        const playMaxBtn = document.getElementById('play-max-btn');
+        const downloadBtn = document.getElementById('download-btn');
+        const statusDiv = document.getElementById('status');
+
+        function showStatus(message, type = 'info') {
+            statusDiv.textContent = message;
+            statusDiv.className = type;
+        }
+
+        // Convert MIDI note number to musical note name
+        function midiNoteToName(midiNote) {
+            const noteNames = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+            const octave = Math.floor(midiNote / 12) - 1;
+            const noteName = noteNames[midiNote % 12];
+            return `${noteName}${octave}`;
+        }
+
+        // Update note name displays
+        function updateNoteNames() {
+            const minNote = parseInt(minNoteInput.value);
+            const maxNote = parseInt(maxNoteInput.value);
+            minNoteNameSpan.textContent = `(${midiNoteToName(minNote)})`;
+            maxNoteNameSpan.textContent = `(${midiNoteToName(maxNote)})`;
+        }
+
+        // Add event listeners for note inputs
+        minNoteInput.addEventListener('input', () => {
+            updateNoteNames();
+            renderKeyboard();
+        });
+        maxNoteInput.addEventListener('input', () => {
+            updateNoteNames();
+            renderKeyboard();
+        });
+
+        // Render keyboard visualization
+        function renderKeyboard() {
+            const keyboard = document.getElementById('keyboard');
+            keyboard.innerHTML = '';
+
+            const minNote = parseInt(minNoteInput.value);
+            const maxNote = parseInt(maxNoteInput.value);
+
+            if (minNote > maxNote) return;
+
+            // Show full MIDI range (0-127)
+            const startNote = 0;
+            const endNote = 127;
+
+            // Count white keys for sizing (C=white, C#=black, etc.)
+            const whiteKeyCount = Array.from({length: 128}, (_, i) => i)
+                .filter(n => ![1, 3, 6, 8, 10].includes(n % 12))
+                .length;
+
+            const whiteKeyWidth = 100 / whiteKeyCount;
+            let whiteKeyIndex = 0;
+
+            for (let note = startNote; note <= endNote; note++) {
+                const noteName = note % 12;
+                const isBlack = [1, 3, 6, 8, 10].includes(noteName);
+                const isInRange = note >= minNote && note <= maxNote;
+
+                const key = document.createElement('div');
+                key.style.position = isBlack ? 'absolute' : 'relative';
+                key.style.height = isBlack ? '50px' : '80px';
+                key.style.cursor = 'pointer';
+                key.style.boxSizing = 'border-box';
+
+                if (isBlack) {
+                    key.style.width = `${whiteKeyWidth * 0.6}%`;
+                    key.style.background = '#000';
+                    key.style.border = '1px solid #666';
+                    key.style.zIndex = '2';
+                    // Position black keys between white keys
+                    key.style.left = `${whiteKeyIndex * whiteKeyWidth - whiteKeyWidth * 0.3}%`;
+
+                    if (isInRange) {
+                        key.style.outline = '2px solid #FF5F52';
+                        key.style.outlineOffset = '-2px';
+                    }
+                } else {
+                    key.style.width = `${whiteKeyWidth}%`;
+                    key.style.background = '#fff';
+                    key.style.border = '1px solid #000';
+                    key.style.zIndex = '1';
+
+                    if (isInRange) {
+                        key.style.background = '#ffcccc';
+                    }
+
+                    whiteKeyIndex++;
+                }
+
+                key.title = midiNoteToName(note);
+
+                key.addEventListener('click', async () => {
+                    if (!selectedPatch) return;
+
+                    try {
+                        if (!audioContext) {
+                            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                        }
+
+                        const sampleRate = audioContext.sampleRate;
+                        const TARGET_LEVEL = 0.5;
+                        const samples = generateSamples(selectedPatch, note, sampleRate, 500, TARGET_LEVEL);
+
+                        const audioBuffer = audioContext.createBuffer(1, samples.length, sampleRate);
+                        const channelData = audioBuffer.getChannelData(0);
+                        channelData.set(samples);
+
+                        const source = audioContext.createBufferSource();
+                        source.buffer = audioBuffer;
+                        source.connect(audioContext.destination);
+                        source.start();
+                    } catch (error) {
+                        console.error('Error playing note:', error);
+                    }
+                });
+
+                keyboard.appendChild(key);
+            }
+        }
+
+        async function loadSysexBytes(bytes, filename) {
+            try {
+                showStatus('Loading SYSEX file...', 'info');
+                console.log('Loading file:', filename, bytes.length, 'bytes');
+
+                patchBank = new PatchBank(bytes);
+                console.log('PatchBank created with', patchBank.patches.length, 'patches');
+
+                displayPatches();
+                showStatus(`Loaded ${patchBank.patches.length} patches from ${filename}`, 'success');
+            } catch (error) {
+                showStatus(`Error loading SYSEX file: ${error.message}`, 'error');
+                console.error('Full error:', error);
+                console.error('Stack:', error.stack);
+            }
+        }
+
+        // Handle SYSEX file upload
+        sysexFileInput.addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const arrayBuffer = await file.arrayBuffer();
+            const bytes = new Uint8Array(arrayBuffer);
+            await loadSysexBytes(bytes, file.name);
+        });
+
+        // Handle example bank selection - load immediately on change
+        exampleSelect.addEventListener('change', async () => {
+            const selectedFile = exampleSelect.value;
+            if (!selectedFile) {
+                return;
+            }
+
+            try {
+                showStatus(`Loading ${selectedFile}...`, 'info');
+                const response = await fetch(`./${selectedFile}`);
+                if (!response.ok) {
+                    throw new Error(`Failed to load example: ${response.status}`);
+                }
+                const arrayBuffer = await response.arrayBuffer();
+                const bytes = new Uint8Array(arrayBuffer);
+                await loadSysexBytes(bytes, selectedFile);
+            } catch (error) {
+                showStatus(`Error loading example: ${error.message}`, 'error');
+                console.error('Full error:', error);
+            }
+        });
+
+        function displayPatches() {
+            patchList.innerHTML = '';
+            patchSection.style.display = 'block';
+
+            patchBank.patches.forEach((patch, index) => {
+                const item = document.createElement('div');
+                item.className = 'patch-item';
+                item.innerHTML = `
+                    <span class="patch-number">${index}:</span>
+                    <span class="patch-name">${patch.getName()}</span>
+                `;
+
+                item.addEventListener('click', () => {
+                    document.querySelectorAll('.patch-item').forEach(el => {
+                        el.classList.remove('selected');
+                    });
+                    item.classList.add('selected');
+                    selectedPatch = patch;
+
+                    // Set default output name to DX7 prefix + sanitized patch name
+                    outputNameInput.value = 'DX7 ' + tonverkSanitize(patch.getName());
+
+                    controlsSection.style.display = 'block';
+                    playMinBtn.disabled = false;
+                    playMaxBtn.disabled = false;
+                    downloadBtn.disabled = false;
+                    renderKeyboard(); // Render keyboard when patch is selected
+                    showStatus(`Selected: ${patch.getName()}`, 'success');
+                });
+
+                patchList.appendChild(item);
+            });
+        }
+
+        // Play min note preview
+        playMinBtn.addEventListener('click', async () => {
+            if (!selectedPatch) return;
+
+            try {
+                if (!audioContext) {
+                    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                }
+
+                const minNote = parseInt(minNoteInput.value);
+                showStatus(`Playing min note (${midiNoteToName(minNote)})...`, 'info');
+
+                const sampleRate = audioContext.sampleRate;
+                const TARGET_LEVEL = 0.5;
+                const samples = generateSamples(selectedPatch, minNote, sampleRate, 1000, TARGET_LEVEL);
+
+                const audioBuffer = audioContext.createBuffer(1, samples.length, sampleRate);
+                const channelData = audioBuffer.getChannelData(0);
+                channelData.set(samples);
+
+                const source = audioContext.createBufferSource();
+                source.buffer = audioBuffer;
+                source.connect(audioContext.destination);
+                source.start();
+
+                showStatus('Playing preview...', 'success');
+            } catch (error) {
+                showStatus(`Error playing audio: ${error.message}`, 'error');
+                console.error(error);
+            }
+        });
+
+        // Play max note preview
+        playMaxBtn.addEventListener('click', async () => {
+            if (!selectedPatch) return;
+
+            try {
+                if (!audioContext) {
+                    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                }
+
+                const maxNote = parseInt(maxNoteInput.value);
+                showStatus(`Playing max note (${midiNoteToName(maxNote)})...`, 'info');
+
+                const sampleRate = audioContext.sampleRate;
+                const TARGET_LEVEL = 0.5;
+                const samples = generateSamples(selectedPatch, maxNote, sampleRate, 1000, TARGET_LEVEL);
+
+                const audioBuffer = audioContext.createBuffer(1, samples.length, sampleRate);
+                const channelData = audioBuffer.getChannelData(0);
+                channelData.set(samples);
+
+                const source = audioContext.createBufferSource();
+                source.buffer = audioBuffer;
+                source.connect(audioContext.destination);
+                source.start();
+
+                showStatus('Playing preview...', 'success');
+            } catch (error) {
+                showStatus(`Error playing audio: ${error.message}`, 'error');
+                console.error(error);
+            }
+        });
+
+        // Download multisample
+        downloadBtn.addEventListener('click', async () => {
+            if (!selectedPatch) return;
+
+            try {
+                const duration = parseInt(document.getElementById('duration').value);
+                const minNote = parseInt(document.getElementById('min-note').value);
+                const maxNote = parseInt(document.getElementById('max-note').value);
+                const increment = parseInt(document.getElementById('note-increment').value);
+                const outputName = outputNameInput.value.trim() || ('DX7 ' + tonverkSanitize(selectedPatch.getName()));
+                const outputFormat = document.querySelector('input[name="output-format"]:checked').value;
+
+                console.log('Parameters:', { duration, minNote, maxNote, increment, outputName, outputFormat });
+
+                if (minNote > maxNote) {
+                    showStatus('Error: Min note must be <= max note', 'error');
+                    return;
+                }
+
+                if (!outputName) {
+                    showStatus('Error: Output name cannot be empty', 'error');
+                    return;
+                }
+
+                // Validate that the output name contains only allowed characters (for Tonverk)
+                if (outputFormat === 'tonverk') {
+                    const sanitizedOutputName = tonverkSanitize(outputName);
+                    if (outputName !== sanitizedOutputName) {
+                        showStatus('Error: Output name contains invalid characters that may cause issues on the Tonverk. Allowed: alphanumeric, ~!@#$%^&()_+-= åßäöüæøçñ', 'error');
+                        return;
+                    }
+                }
+
+                showStatus(`Generating ${outputFormat === 'tonverk' ? 'Tonverk' : 'OP-XY'} multisample...`, 'info');
+                downloadBtn.disabled = true;
+
+                // Generate MIDI note array
+                const midiNotes = [];
+                for (let note = minNote; note < maxNote; note += increment) {
+                    midiNotes.push(note);
+                }
+                midiNotes.push(maxNote); // Always include the max note
+
+                const sampleRate = 44100;
+                console.log('Calling generateMultisample with:', {
+                    patch: selectedPatch.getName(),
+                    noteCount: midiNotes.length,
+                    sampleRate,
+                    duration,
+                    outputName,
+                    outputFormat
+                });
+                const zipBlob = await generateMultisampleWithName(
+                    selectedPatch,
+                    outputName,
+                    midiNotes,
+                    sampleRate,
+                    duration,
+                    outputFormat
+                );
+                console.log('ZIP generated successfully');
+
+                // Download the ZIP
+                const url = URL.createObjectURL(zipBlob);
+                const a = document.createElement('a');
+                a.href = url;
+                const extension = outputFormat === 'tonverk' ? '.zip' : '.preset.zip';
+                a.download = `${outputName}${extension}`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+
+                showStatus('Multisample downloaded!', 'success');
+                downloadBtn.disabled = false;
+            } catch (error) {
+                showStatus(`Error generating multisample: ${error.message}`, 'error');
+                console.error(error);
+                downloadBtn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>
