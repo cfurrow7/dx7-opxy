@@ -1,6 +1,6 @@
-# DX7 Multisample Generator
+# DX7 to OP-XY / Tonverk Multisample Patch Maker
 
-Generate DX7 multisamples for **Elektron Tonverk** or **OP-XY** from SYSEX patch files.
+Convert DX7 SYSEX patches to multisamples for **OP-XY** or **Elektron Tonverk**.
 
 Forked from [spacejam/tv7-js](https://github.com/spacejam/tv7-js) with added OP-XY support.
 
@@ -18,14 +18,14 @@ Forked from [spacejam/tv7-js](https://github.com/spacejam/tv7-js) with added OP-
 
 ### Online (Easiest)
 
-Visit the hosted version at: [https://tylerneely.com/tv7/tv7.html](https://tylerneely.com/tv7/tv7.html)
+Visit the hosted version at: [https://cfurrow7.github.io/dx7-opxy/tv7.html](https://cfurrow7.github.io/dx7-opxy/tv7.html)
 
 ### Local Development
 
 ```bash
 # Clone the repository
-git clone https://github.com/cfurrow7/tv7-multisampler.git
-cd tv7-multisampler
+git clone https://github.com/cfurrow7/dx7-opxy.git
+cd dx7-opxy
 
 # Install dependencies
 npm install
